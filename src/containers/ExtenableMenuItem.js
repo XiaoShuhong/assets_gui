@@ -8,8 +8,8 @@ export default class ExtenableMenuItem extends Component {
      
       <div>
         <MenuItemHeader
-         cate={cate} srcUrl={this.props.srcUrl}/>
-        <MenuItemContent/>
+         cate={cate} srcUrl={this.props.srcUrl} id={this.props.id}/>
+        <MenuItemContent id={this.props.id}/>
       </div>
     )
   }

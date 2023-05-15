@@ -1,10 +1,9 @@
-import React, { Component } from 'react'
-export default class AddImageButton extends Component {
-  render() {
-    return (
-      <div>
-          添加图片
-      </div>
-    )
-  }
-}
+import React from 'react';
+import addIcon from '../assets/image/addicon.png';
+
+const AddImageButton = ({ onClick }) => {
+  return (
+      <img src={addIcon} alt="Add Icon" className="add-button-icon" onClick={onClick}/>
+  );
+};
+export default AddImageButton;

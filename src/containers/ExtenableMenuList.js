@@ -10,11 +10,11 @@ export default class ExtenableMenuList extends Component {
     return (
       <div>
         <ExtenableMenuItem 
-          cate='role' srcUrl={srcRole}/>
+          cate='role' srcUrl={srcRole} id={1}/>
         <ExtenableMenuItem
-          cate='scene' srcUrl={srcScene}/>
+          cate='scene' srcUrl={srcScene} id={2}/>
         <ExtenableMenuItem
-          cate='plot' srcUrl={srcPlot}/>
+          cate='plot' srcUrl={srcPlot} id={3}/>
       </div>
     )
   }
