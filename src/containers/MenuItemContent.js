@@ -35,7 +35,7 @@ class MenuItemContent extends Component {
     return (
       <div className={`content-dropdown ${isOpen ? 'show' : ''}`}>
         {isOpen && (
-          <div>
+          <div className='content-list'> 
             <ImageList images={images} onDelete={this.handleDeleteImage} />
             <AddImageButton onClick={this.handleAddImage}/>
           </div>

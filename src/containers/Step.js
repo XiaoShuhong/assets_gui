@@ -1,7 +1,7 @@
 import React, { Component,PropTypes } from 'react'
 import { Steps } from 'antd';
 import { connect } from 'react-redux'
-import { goToAct } from '../reducer/navibar';
+import { goToAct } from '../reducer/storypage';
 
 class StepContainer extends Component {
   // static propTypes= {
@@ -16,7 +16,7 @@ class StepContainer extends Component {
     const oldact =this.props.act
     console.log(oldact,e)
   
-    if (oldact!=e){
+    if (oldact!==e){
       this.props.onChange(e)
     }
     

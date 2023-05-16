@@ -3,16 +3,18 @@ import ReactDOM from 'react-dom'
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
 import './index.css'
-import naviReducer from './reducer/navibar.js'
-import NaviBar from './containers/NaviBar.js'
+import storyReducer from './reducer/storypage.js'
+import StoryPage from './containers/StoryPage.js'
 
-const store = createStore(naviReducer)
+const store = createStore(storyReducer)
 
 
 ReactDOM.render(
   <Provider store={store}>
-    <NaviBar/>
+    <StoryPage/>
   </Provider>
   ,
   document.getElementById('root')
 )
+
+

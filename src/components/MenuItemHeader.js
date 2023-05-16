@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import fold from '../assets/image/fold.png';
 import unfold from '../assets/image/unfold.png';
 import { connect } from 'react-redux'
-import { unfoldItem } from '../reducer/navibar';
+import { unfoldItem } from '../reducer/storypage';
 class MenuItemHeader extends Component {
   constructor() {
     super();
