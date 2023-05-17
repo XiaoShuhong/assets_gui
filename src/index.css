@@ -152,7 +152,7 @@
   position: absolute;
   bottom: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   background-color: #ffffff;
   border-radius: 50px;
@@ -160,6 +160,15 @@
   padding: 10px;
   transform: translateY(33%); 
   box-shadow: 4px -4px 20px rgba(157, 123, 224, 0.25);
+  
+}
+
+.toolbutton{
+  position: relative;
+  display: flex;
+  height:50%;
+  transform: translateY(-20%); 
+ 
 }
 
 .colorbar {
@@ -202,4 +211,42 @@
   bottom: -5px;
 
 
+}
+
+.shape-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+
+.shape-menu-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-200%); 
+  height:100%
+}
+
+.shape-menu-toggle img {
+  width: 100%;
+  height: 100%;
+}
+
+
+.shapebar {
+  position: absolute;
+  width: 30%;
+  height: 30%;
+  bottom: 90%;
+  right: 3%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 30px;
+  border: 2px solid rgba(157, 123, 224, 0.69);
+  padding: 10px;
+  box-shadow: 7px -7px 30px rgba(157, 123, 224, 0.25);
 }

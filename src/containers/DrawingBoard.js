@@ -8,13 +8,19 @@ export default class DrawingBoard extends Component {
     super(props);
     this.state = {
       selectedColor: '#000000',
-      selectedTool: 'pencil',
+      selectedTool: 'pen',
     };
   }
 
   handleColorSelect = (color) => {
     this.setState({ selectedColor: color });
   };
+
+  handleToolSelect = (tool) => {
+    this.setState({ selectedTool: tool });
+    console.log(tool)
+  };
+
   render() {
     const colors = ['#000000', '#FFD2F2', '#D999FF', '#A159D3', '#E15534', '#FFB95C', '#FEF893', '#76BF86', '#37A396', '#038ECA'];
     const { selectedColor, selectedTool } = this.state;
@@ -22,7 +28,7 @@ export default class DrawingBoard extends Component {
       <div className='board'>
         <StoryCanvas color={selectedColor} tool={selectedTool} />
         <ColorBar onColorSelect={this.handleColorSelect} platte={colors} />
-        <ToolBar/>
+        <ToolBar onToolSelect={this.handleToolSelect} />
       </div>
     )
   }
