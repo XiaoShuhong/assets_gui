@@ -14,7 +14,7 @@ class StepContainer extends Component {
   handleStepChange(e){
     // debugger
     const oldact =this.props.act
-    console.log(oldact,e)
+
   
     if (oldact!==e){
       this.props.onChange(e)
