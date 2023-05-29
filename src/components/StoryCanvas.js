@@ -22,6 +22,8 @@ componentDidMount() {
   if (this.props.getUndoFunction) {
     this.props.getUndoFunction(this.undoLastLine);
   }
+
+
 }
 componentWillUnmount() {
   window.removeEventListener('resize', this.updateBoardSize);

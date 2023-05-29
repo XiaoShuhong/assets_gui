@@ -107,7 +107,7 @@ class DrawingBoard extends Component {
         return 'placeholder';
     }
     if(index>newJSONLIST.length-1){
-      return 'placeholder'
+      // return 'placeholder'
     }else{
       return newJSONLIST[index]
     }
@@ -118,6 +118,7 @@ class DrawingBoard extends Component {
     const colors = ['#000000', '#FFD2F2', '#D999FF', '#A159D3', '#E15534', '#FFB95C', '#FEF893', '#76BF86', '#37A396', '#038ECA'];
     const { selectedColor, selectedTool } = this.state;
     const canvas_json = this.LoadCanvasJSON(this.props.unfold_index,this.props.image_index)
+    console.log(canvas_json)
     // const canvas_json = this.LoadCanvasJSON(this.state.cate,this.props.onimg)
 
    

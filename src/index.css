@@ -96,13 +96,22 @@
 }
 
 .image-item {
-  width: 80%;
-  height: auto;
+  width: 130px;
+  height: 130px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-bottom: 10px;
   position: relative;
+  /* border: 1px solid #000; */
+  background-color: #ffffff;
+  border-radius: 15px;
+}
+
+.image-item.selected {
+  /* 在这里添加你需要的样式 */
+  border: 2px solid rgb(255, 185, 92);  /* 添加一个蓝色的边框 */
+  box-shadow: 0 0 10px rgba(255,185,92,0.5); /* 添加一个蓝色的阴影 */
 }
 
 .image-item img {
@@ -124,8 +133,8 @@
 
 .delete-button {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: 5%;
+  right: 5%;
   background-color: transparent;
   color: red;
   border: none;
@@ -264,13 +273,12 @@
   margin-bottom: 10px;
 }
 
-.inspirationlist{
+.inspirationlist1{
   position: absolute;
-  width: 20%;
-  height: 20%;
-  bottom: 70%;
-  right: 5%;
-  
+  width: 50%;
+  height: 15%;
+  bottom: 75%;
+  /* right: 5%; */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -279,4 +287,46 @@
   border: 3.16px solid rgba(255, 203, 71, 1);
   padding: 10px;
   box-shadow: 8.42px 8.42px 10.53px rgba(169, 169, 169, 0.26);
+}
+
+.sub-inspiration1 {
+  width: 20%;
+  height: 80%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff; /* Add this */
+  border-radius: 20px; /* Adjust this to change the roundness of the corners */
+  box-shadow: 0px 4px 10px rgba(246, 179, 46, 0.3); /* Adjust this to change the shadow */
+  margin-left: 2%; /* add left margin */
+  margin-right: 2%; /* add right margin */
+}
+
+
+.sub-inspiration1 img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: cover;
+}
+
+.inspirationlist2{
+  position: absolute;
+  width: 15%;
+  height: 20%;
+  bottom: 70%;
+  right: 5%;
+  
+  display: flex;
+  justify-content: center; /* horizontally center */
+  align-items: center; /* vertically center */
+  background-color:  rgba(246, 179, 46, 0.35);
+  border-radius: 40px;
+  border: 3.16px solid rgba(255, 203, 71, 1);
+  padding: 10px;
+  box-shadow: 8.42px 8.42px 10.53px rgba(169, 169, 169, 0.26);
+}
+
+.inspirationlist2 img{
+  width:85%;
+  height: 85%;
 }

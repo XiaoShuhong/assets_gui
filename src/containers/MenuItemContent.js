@@ -149,7 +149,7 @@ const mapDispatchToProps = (dispatch) => {
     onChange: (id,url,json) => {
       dispatch(changeJSON(id,json));
       dispatch(changeURL(id,url));
-      dispatch(ImgIndex(-2))
+      // dispatch(ImgIndex(-1))
     }
   }
 }
