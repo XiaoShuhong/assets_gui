@@ -8,8 +8,7 @@ class VoiceButton extends Component {
     this.state = { isPressed: false };
     this.mediaRecorder = null;
     this.chunks = [];
-    this.handleType = this.handleType.bind(this);
-    this.type = this.handleType();
+    
   }
   
   handleType = () => {
@@ -20,6 +19,20 @@ class VoiceButton extends Component {
         return 'background'
       case 3:
         return 'event'
+    }
+
+
+  }
+
+
+  handleAct = () => {
+    switch(this.props.act){
+      case 0:
+        return 'act1'
+      case 1:
+        return 'acrt2'
+      case 2:
+        return 'act3'
     }
 
   }
@@ -37,21 +50,25 @@ class VoiceButton extends Component {
         }
 
         this.mediaRecorder.onstop = e => {
-          const blob = new Blob(this.chunks, { 'type' : 'audio/ogg; codecs=opus' });
-          const id = this.props.unfold_index;
-          const type = this.type
+          const blob = new Blob(this.chunks, { 'type' : 'audio/webm' });
+          const act = this.handleAct()
+          const type = this.handleType()
+          console.log(act,type,this.props.act,this.props.unfold_index)
           var formData = new FormData();
 
           // Append the blob, id and type as fields in the form
-          formData.append('file', blob);
-          formData.append('id', id);
+          formData.append('file', blob, 'filename.webm'); 
+          formData.append('act', act);
           formData.append('type', type);
-          fetch('http://127.0.0.1:5000/generate_story', {
+          fetch('http://127.0.0.1:5000/get_audio', {
             method: 'POST',
             body: formData
           })
           .then(response => response.json())
-          .then(data => console.log(data))
+          .then(data => {
+              console.log('Status:', data.status);
+              console.log('Content:', data.content);
+            })
           .catch((error) => {
             console.error('Error:', error);
           });
@@ -71,7 +88,8 @@ class VoiceButton extends Component {
 
   render() {
     const buttonImage = this.state.isPressed ? onvoiceButton : voiceButton;
-
+    
+    
     return (
       <img
         className="float-button"
@@ -88,7 +106,8 @@ class VoiceButton extends Component {
 const mapStateToProps = (state) => {
   return {
     image_index: state.image_index,
-    unfold_index: state.unfold_index
+    unfold_index: state.unfold_index,
+    act: state.act
   };
 };
 

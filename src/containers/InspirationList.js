@@ -10,13 +10,51 @@ class InspirationList extends Component {
   handleDelete = () => {
     this.props.onChange(false);
   } 
+
+  handleAsk = () => {
+    let id, askterm
+    id = this.props.act
+    switch (this.props.unfold_index){
+      case 1:
+        askterm = 'role'
+        break
+      case 2:
+        askterm = 'background'
+        break
+      case 3:
+        askterm = 'event'
+        break
+    }
+    return [id, askterm];
+  }
+
   render() {
+    let id, askterm
     if (!this.props.help) {
       return null; // Don't render anything if help is false
+    }else{
+      [id, askterm] = this.handleAsk()
     }
 
 
+
+
     if (this.props.unfold_index === 1) {
+      var formData = new FormData();
+      formData.append('id', id);
+      formData.append('askterm', askterm);
+      fetch('http://127.0.0.1:5000/generate_role', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => response.json())
+      .then(data => {
+          // console.log('Status:', data.status);
+          // console.log('Content:', data.content);
+        })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
       return (
         <div className="inspirationlist1">
         <div className="sub-inspiration1">
@@ -54,7 +92,9 @@ class InspirationList extends Component {
 const mapStateToProps = (state) => {
   return {
     help: state.help,
-    unfold_index: state.unfold_index
+    image_index: state.image_index,
+    unfold_index: state.unfold_index,
+    act: state.act
   };
 };
 

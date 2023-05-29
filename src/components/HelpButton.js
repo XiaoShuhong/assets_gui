@@ -23,6 +23,7 @@ class HelpButton extends Component {
 
   handleMouseUp = () => {
     this.setState({ isPressed: false });
+
   }
 
   render() {
