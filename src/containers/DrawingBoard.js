@@ -6,6 +6,7 @@ import InspirationList from './InspirationList.js'
 import { connect } from 'react-redux';
 import {changeJSON,changeURL} from '../reducer/storypage.js'
 import back from '../assets/image/surface.png'
+import PlotCanvas from '../components/PlotCanvas.js'
 class DrawingBoard extends Component {
 
   constructor(props) {
@@ -125,7 +126,8 @@ class DrawingBoard extends Component {
    
     return (
       <div>
-        {this.props.unfold_index > 0 && this.props.image_index > -1 ? (
+      {this.props.unfold_index > 0 && this.props.image_index > -1 ? (
+        this.props.unfold_index === 1 || this.props.unfold_index === 2 ? (
           <div className='board'>
             <StoryCanvas
               getUndoFunction={this.getUndoFunction}
@@ -140,12 +142,19 @@ class DrawingBoard extends Component {
             <ToolBar onToolSelect={this.handleToolSelect} />
             <InspirationList/>
           </div>
-        ) : (
-          <div className='surfaceimg'>
-            <img src={back} />
-          </div>
-        )}
-      </div>
+        ) : this.props.unfold_index === 3 ? (
+          
+          <PlotCanvas 
+            json={canvas_json}
+          />
+         
+        ) : null
+      ) : (
+        <div className='surfaceimg'>
+          <img src={back} />
+        </div>
+      )}
+    </div>
     )
   }
 }
