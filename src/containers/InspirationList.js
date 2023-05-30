@@ -4,8 +4,13 @@ import tempimg2 from '../assets/image/temp2.png'
 import { connect } from 'react-redux';
 import deleteIcon from '../assets/image/delete.png';
 import {askHelp} from '../reducer/storypage.js'
+import ReactLoading from "react-loading";
 class InspirationList extends Component {
-
+  state = {
+    imgdata: [], // hold fetched image and audio data
+    blobdata:[],
+    isLoading: false
+  }
 
   handleDelete = () => {
     this.props.onChange(false);
@@ -28,63 +33,117 @@ class InspirationList extends Component {
     return [id, askterm];
   }
 
-  render() {
+  fetchData = () => {
     let id, askterm
     if (!this.props.help) {
-      return null; // Don't render anything if help is false
-    }else{
+      return null // Don't fetch anything if help is false
+    } else {
       [id, askterm] = this.handleAsk()
     }
 
-
-
-
-    if (this.props.unfold_index === 1) {
-      var formData = new FormData();
-      formData.append('id', id);
-      formData.append('askterm', askterm);
-      fetch('http://127.0.0.1:5000/generate_role', {
-        method: 'POST',
-        body: formData
+    var formData = new FormData()
+    formData.append('id', id)
+    formData.append('askterm', askterm)
+    fetch('http://127.0.0.1:5000/generate', {
+      method: 'POST',
+      body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+      let imageurl = [];
+      let bloburl = [];
+      const imagesData = data.image;
+      const soundsData = data.sound;
+      console.log(imagesData,soundsData)
+      imagesData.map((base64, index) => {
+        const imageBlob = this.base64ToBlob(base64, 'image/png'); // use the correct mime type for your images
+        const imageUrl = URL.createObjectURL(imageBlob);
+        imageurl.push(imageUrl);
       })
-      .then(response => response.json())
-      .then(data => {
-          // console.log('Status:', data.status);
-          // console.log('Content:', data.content);
-        })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+      soundsData.map((base64, index) => {
+        const soundBlob = this.base64ToBlob(base64, 'audio/mp3'); // use the correct mime type for your audio
+        const soundUrl = URL.createObjectURL(soundBlob);
+        bloburl.push(soundUrl)
+      })
+      console.log(imageurl,bloburl)
+      this.setState({imgdata:imageurl, blobdata:bloburl})
+
+    })
+    .then(this.setState({isLoading:true}))
+
+
+  }
+
+  base64ToBlob(base64, mime) {
+    mime = mime || '';
+    var sliceSize = 1024;
+    var byteChars = window.atob(base64);
+    var byteArrays = [];
+
+    for (var offset = 0, len = byteChars.length; offset < len; offset += sliceSize) {
+        var slice = byteChars.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    return new Blob(byteArrays, {type: mime});
+}
+
+
+
+
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.help !== this.props.help && this.props.help===true
+    ) {
+      this.fetchData()
+    }
+  }
+
+
+  render() {
+   
+    const { imgdata, blobdata,isLoading } = this.state;
+   
+    if (!this.props.help) {
+      return null; // Don't render anything if help is false
+    }
+
+    if (!this.state.isLoading) {
+      // return <div>Loading...</div>; // render loading indicator
+    } else{
       return (
         <div className="inspirationlist1">
-        <div className="sub-inspiration1">
-          <img src={tempimg} />
-        </div>
-        <div className="sub-inspiration1">
-          <img src={tempimg} />
-        </div>
-        <div className="sub-inspiration1">
-          <img src={tempimg} />
-        </div>
-        <div className="sub-inspiration1">
-          <img src={tempimg} />
-        </div>
+        {imgdata.length > 0 ? (
+          imgdata.map((imgUrl, index) => (
+            <div className="sub-inspiration1" key={index}>
+              <img
+                src={imgUrl}
+                onClick={() => {
+                  const audio = new Audio(blobdata[index]);
+                  audio.play();
+                }}
+              />
+            </div>
+          ))
+        ) : (
+          <ReactLoading type={"spin"} color={"blue"} />
+        )}
       </div>
       );
 
-
-    }else if (this.props.unfold_index === 2) {
-      return (
-        <div>
-          <div className="inspirationlist2">
-            <img src={tempimg2} />
-          </div>
-        <button className="delete-button" onClick={this.handleDelete}><img src={deleteIcon} /></button>
-        </div>
-        
-        
-      );
     }
+      
+
+    
 
   }
 }

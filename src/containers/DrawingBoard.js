@@ -5,6 +5,7 @@ import ToolBar from '../components/ToolBar.js'
 import InspirationList from './InspirationList.js'
 import { connect } from 'react-redux';
 import {changeJSON,changeURL} from '../reducer/storypage.js'
+import back from '../assets/image/surface.png'
 class DrawingBoard extends Component {
 
   constructor(props) {
@@ -123,22 +124,26 @@ class DrawingBoard extends Component {
 
    
     return (
-      <div >
-        {this.props.unfold_index > 0 && this.props.image_index > -1 && (
-            <div className='board'>
-                <StoryCanvas
-                    getUndoFunction={this.getUndoFunction}
-                    color={selectedColor}
-                    tool={selectedTool}
-                    json={canvas_json}
-                    onUpdateCanvas={this.handleCanvasUpdate}
-                    cate_id={this.props.unfold_index}
-                    image_id={this.props.image_index}
-                />
-                <ColorBar onColorSelect={this.handleColorSelect} platte={colors} />
-                <ToolBar onToolSelect={this.handleToolSelect} />
-                <InspirationList/>
-            </div>
+      <div>
+        {this.props.unfold_index > 0 && this.props.image_index > -1 ? (
+          <div className='board'>
+            <StoryCanvas
+              getUndoFunction={this.getUndoFunction}
+              color={selectedColor}
+              tool={selectedTool}
+              json={canvas_json}
+              onUpdateCanvas={this.handleCanvasUpdate}
+              cate_id={this.props.unfold_index}
+              image_id={this.props.image_index}
+            />
+            <ColorBar onColorSelect={this.handleColorSelect} platte={colors} />
+            <ToolBar onToolSelect={this.handleToolSelect} />
+            <InspirationList/>
+          </div>
+        ) : (
+          <div className='surfaceimg'>
+            <img src={back} />
+          </div>
         )}
       </div>
     )

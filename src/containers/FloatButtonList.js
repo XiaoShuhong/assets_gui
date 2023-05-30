@@ -4,10 +4,16 @@ import VoiceButton from '../components/VoiceButton'
 
 class FloatButtonList extends Component {
   render() {
+    const { unfold_index,image_index } = this.props;
+    
     return (
       <div className='float-button-list'>
-        <HelpButton />
-        <VoiceButton/>
+        {unfold_index > 0 && image_index > -1 && (
+          <>
+            <HelpButton />
+            <VoiceButton/>
+          </>
+        )}
       </div>
     );
   }

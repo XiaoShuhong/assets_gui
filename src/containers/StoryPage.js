@@ -38,7 +38,7 @@ class StoryPage extends Component {
       <div className='storypage'>
         <NaviBar onClickImage={this.handleClickImage}/>
         <DrawingBoard />
-        <FloatButtonList/>
+        <FloatButtonList unfold_index={this.props.unfold_index} image_index={this.props.image_index}/>
       </div>
     )
   }
