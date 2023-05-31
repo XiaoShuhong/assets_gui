@@ -8,6 +8,17 @@
   width: 80%; 
   height: 100%; 
 }
+
+
+.plotimg img {
+  position: absolute; 
+  top: 0;
+  left: 0;  
+  width: 100%; 
+  height: 100%; 
+}
+
+
 .navibar{
   position: fixed;
   top: 0;
@@ -336,4 +347,32 @@
 .inspirationlist2 img{
   width:85%;
   height: 85%;
+}
+
+.audioplayer{
+  position: absolute;
+  left: 50%;
+  bottom: 50%;
+}
+
+
+/* AudioPlayer.css */
+
+.audio-player-container {
+  width: 300px;
+  margin: 0 auto;
+}
+
+.audio-progress-bar {
+  width: 100%;
+}
+
+.audio-play-button {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.audio-element {
+  display: none;
 }

@@ -120,7 +120,7 @@ class DrawingBoard extends Component {
     const colors = ['#000000', '#FFD2F2', '#D999FF', '#A159D3', '#E15534', '#FFB95C', '#FEF893', '#76BF86', '#37A396', '#038ECA'];
     const { selectedColor, selectedTool } = this.state;
     const canvas_json = this.LoadCanvasJSON(this.props.unfold_index,this.props.image_index)
-    console.log(canvas_json)
+    // console.log(canvas_json)
     // const canvas_json = this.LoadCanvasJSON(this.state.cate,this.props.onimg)
 
    
@@ -143,10 +143,14 @@ class DrawingBoard extends Component {
             <InspirationList/>
           </div>
         ) : this.props.unfold_index === 3 ? (
+          <div className='board'>
+            <PlotCanvas 
+              json={canvas_json}
+            />
+            
+            <InspirationList/>
+          </div>
           
-          <PlotCanvas 
-            json={canvas_json}
-          />
          
         ) : null
       ) : (
