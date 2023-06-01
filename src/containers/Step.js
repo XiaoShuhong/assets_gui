@@ -2,11 +2,12 @@ import React, { Component,PropTypes } from 'react'
 import { Steps } from 'antd';
 import { connect } from 'react-redux'
 import { goToAct } from '../reducer/storypage';
+import JumpToCode from '../assets/image/jump.png';
+
+
 
 class StepContainer extends Component {
-  // static propTypes= {
-  //   act: PropTypes.number
-  // }
+
   constructor () {
     super()
   }
@@ -22,6 +23,13 @@ class StepContainer extends Component {
     
   }
   
+
+  
+  redirectToPage = () => {
+
+    
+    
+}
   render() {
 
     const item = [{title: '',},{title: '',},{title: '',},]
@@ -33,6 +41,9 @@ class StepContainer extends Component {
             items={item}
             onChange={this.handleStepChange.bind(this)}
            />
+           {this.props.act === 2 && (
+              <img src={JumpToCode} alt="Your Image" onClick={this.redirectToPage}/>
+            )}
       </div>
     )
   }
@@ -41,7 +52,9 @@ class StepContainer extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    act: state.act
+    act: state.act,
+    role_url:state.role_url,
+    scene_url:state.scene_url
   }
 }
 

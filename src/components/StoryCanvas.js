@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Stage, Layer, Line } from 'react-konva';
 import { connect } from 'react-redux';
+
+
 class StoryCanvas extends Component {
   constructor(props) {
     super(props);

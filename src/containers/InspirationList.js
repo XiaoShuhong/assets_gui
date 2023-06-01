@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import tempimg from '../assets/image/temp.png'
-import tempimg2 from '../assets/image/temp2.png'
 import { connect } from 'react-redux';
 import deleteIcon from '../assets/image/delete.png';
 import {askHelp} from '../reducer/storypage.js'
