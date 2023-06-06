@@ -201,6 +201,25 @@
  
 }
 
+.toolbar_hidden{
+  width: 80%;
+  height:20%;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #ffffff;
+  border-radius: 50px;
+  border: 2px solid rgba(157, 123, 224, 0.69);
+  padding: 10px;
+  transform: translateY(75%); 
+  box-shadow: 4px -4px 20px rgba(157, 123, 224, 0.25);
+}
+.fold{
+  transform: translateY(-300%); 
+}
+
 .colorbar {
   position: absolute;
   width: 50%;
@@ -332,19 +351,17 @@
 
 .inspirationlist2{
   position: absolute;
-  width: 15%;
-  height: 20%;
-  bottom: 70%;
-  right: 5%;
-  
+  width: 50%;
+  height: 15%;
+  bottom: 75%;
+  /* right: 5%; */
   display: flex;
-  justify-content: center; /* horizontally center */
-  align-items: center; /* vertically center */
-  background-color:  rgba(246, 179, 46, 0.35);
+  justify-content: space-between;
+  align-items: center;
+  
   border-radius: 40px;
-  border: 3.16px solid rgba(255, 203, 71, 1);
+  
   padding: 10px;
-  box-shadow: 8.42px 8.42px 10.53px rgba(169, 169, 169, 0.26);
 }
 
 .inspirationlist2 img{
@@ -385,4 +402,9 @@
   position: absolute;
   top:20%;
   height:50%
+}
+
+.insp_button{
+  position: absolute;
+  right:-45%
 }

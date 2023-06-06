@@ -3,17 +3,22 @@ import { connect } from 'react-redux';
 import deleteIcon from '../assets/image/delete.png';
 import {askHelp} from '../reducer/storypage.js'
 import ReactLoading from "react-loading";
+import buttonOn from '../assets/image/insp_button_on.png'
+import buttonOff from '../assets/image/insp_button_off.png'
 class InspirationList extends Component {
   state = {
     imgdata: [], // hold fetched image and audio data
     blobdata:[],
-    isLoading: false
+    isLoading: false,
+    isListVisible:true
   }
 
   handleDelete = () => {
     this.props.onChange(false);
   } 
-
+  handleButtonClick = () => {
+    this.setState(prevState => ({ isListVisible: !prevState.isListVisible })); // 点击按钮时切换列表可见状态
+  }
   handleAsk = () => {
     let id, askterm
     id = (this.props.act+1).toString()
@@ -109,36 +114,76 @@ class InspirationList extends Component {
 
   render() {
    
-    const { imgdata, blobdata,isLoading } = this.state;
+    const { imgdata, blobdata,isLoading,isListVisible } = this.state;
    
     if (!this.props.help) {
       return null; // Don't render anything if help is false
     }
-
-    if (!this.state.isLoading) {
-      // return <div>Loading...</div>; // render loading indicator
-    } else{
-      return (
-        <div className="inspirationlist1">
-        {imgdata.length > 0 ? (
-          imgdata.map((imgUrl, index) => (
-            <div className="sub-inspiration1" key={index}>
-              <img
-                src={imgUrl}
-                onClick={() => {
-                  const audio = new Audio(blobdata[index]);
-                  audio.play();
-                }}
-              />
-            </div>
-          ))
-        ) : (
-          <ReactLoading type={"spin"} color={"blue"} />
-        )}
-      </div>
-      );
-
+    if (this.state.isLoading) {
+      if (isListVisible) {
+        return (
+          <div className="inspirationlist1">
+            {imgdata.length > 0 ? (
+              imgdata.map((imgUrl, index) => (
+                <div className="sub-inspiration1" key={index}>
+                  <img
+                    src={imgUrl}
+                    onClick={() => {
+                      const audio = new Audio(blobdata[index]);
+                      audio.play();
+                    }}
+                  />
+                </div>
+              ))
+            ) : (
+              <ReactLoading type={"spin"} color={"blue"} />
+            )}
+              <div className='insp_button'>
+                <img src={buttonOn} onClick={this.handleButtonClick}/>
+              </div>
+          </div>
+        );
+      }
+      else{
+        return (
+        <div className="inspirationlist2">
+          <div className='insp_button'>
+            <img src={buttonOff} onClick={this.handleButtonClick}/>
+          </div>
+        </div>
+        );
+      }
     }
+    // if (!this.state.isLoading) {
+    //   // return <div>Loading...</div>; // render loading indicator
+    // } else{
+    //   return (
+    
+    //     <div className="inspirationlist1">
+    //       {imgdata.length > 0 ? (
+    //         imgdata.map((imgUrl, index) => (
+    //           <div className="sub-inspiration1" key={index}>
+    //             <img
+    //               src={imgUrl}
+    //               onClick={() => {
+    //                 const audio = new Audio(blobdata[index]);
+    //                 audio.play();
+    //               }}
+    //             />
+    //           </div>
+    //         ))
+    //       ) : (
+    //         <ReactLoading type={"spin"} color={"blue"} />
+    //       )}
+    //         <div className='insp_button'>
+    //           <img src={buttonOn}/>
+    //         </div>
+    //   </div>
+        
+        
+    //   );
+
+    // }
       
 
     

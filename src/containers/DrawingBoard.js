@@ -15,7 +15,8 @@ class DrawingBoard extends Component {
       selectedColor: '#000000',
       selectedTool: 'pen',
       is_generate:false,
-      image:null
+      image:null,
+      show_tool:true
     };
     
   }
@@ -232,7 +233,14 @@ class DrawingBoard extends Component {
       console.error('Error:', error);
   });
   }
- 
+  clickfold = () => {
+    console.log('click')
+    this.setState({show_tool:false})
+  }
+  clickunfold= () => {
+    console.log('click')
+    this.setState({show_tool:true})
+  }
 
   render() {
     const colors = ['#000000', '#FFD2F2', '#D999FF', '#A159D3', '#E15534', '#FFB95C', '#FEF893', '#76BF86', '#37A396', '#038ECA'];
@@ -267,8 +275,8 @@ class DrawingBoard extends Component {
               setGenerate={this.setGenerate}
               image = {this.state.image}
             />
-            <ColorBar onColorSelect={this.handleColorSelect} platte={colors} />
-            <ToolBar onToolSelect={this.handleToolSelect} setGenerate={this.setGenerate}/>
+            {this.state.show_tool && <ColorBar onColorSelect={this.handleColorSelect} platte={colors} />} 
+            <ToolBar onToolSelect={this.handleToolSelect} setGenerate={this.setGenerate} onClickFold={this.clickfold} onClickUnFold={this.clickunfold} is_show={this.state.show_tool}/>
             <InspirationList/>
           </div>
         ) : this.props.unfold_index === 3 ? (

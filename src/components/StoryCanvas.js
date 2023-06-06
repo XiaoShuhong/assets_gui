@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Stage, Layer, Line, Image } from 'react-konva';
+import { Stage, Layer, Line, Image, Transformer  } from 'react-konva';
 import { connect } from 'react-redux';
 import { Slider } from 'antd';
 
@@ -16,7 +16,9 @@ class StoryCanvas extends Component {
       cate_id:this.props.cate_id,
       image_id:this.props.image_id,
       image:this.props.image,
-      strokeWidth: 8
+      strokeWidth: 5,
+      selectedNode: null,
+      draggable: false
      
   };
 }
@@ -62,34 +64,67 @@ componentDidUpdate(prevProps,prevState) {
       });
   }
   if(prevProps.image!==this.props.image){
-    console.log('here')
     
     this.setState({image:this.props.image})
     
   }
   if(prevState.image!==this.state.image&& this.state.image!==null){
-    console.log('here2')
+   
     const oldCanvasData = this.saveCanvas();
     this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, oldCanvasData); 
+  }
+  if(prevProps.tool!==this.props.tool){
+    if(this.props.tool==='hand'){
+      this.setState({draggable:true})
+    }else if(prevProps.tool==='hand'){
+      this.setState({draggable:false, selectedNode:null})
+    }
+
   }
 
 }
 
 
-saveCanvas= () => {
-  const dataURL = this.stageRef.getStage().toDataURL();
+saveCanvas = () => {
+  let minX = this.state.boardWidth;
+  let maxX = 0;
+  let minY = this.state.boardHeight;
+  let maxY = 0;
+  const padding = 30
+  this.state.lines.forEach(line => {
+    const xCoords = line.points.filter((_, i) => i % 2 === 0);
+    const yCoords = line.points.filter((_, i) => i % 2 === 1);
 
-    // Save the lines array and other state information as a JSON object
-    const dataObj = {
-      lines: this.state.lines,
-      boardWidth: this.state.boardWidth,
-      boardHeight: this.state.boardHeight,
-      // images: this.state.images
-    };
-    // Store the JSON object as a string
-    const dataJSON = JSON.stringify(dataObj);
+    minX = Math.min(minX, ...xCoords);
+    maxX = Math.max(maxX, ...xCoords);
+    minY = Math.min(minY, ...yCoords);
+    maxY = Math.max(maxY, ...yCoords);
+  });
 
-    return {dataURL, dataJSON};
+  // Account for the image in the bounding box
+  if (this.state.image!==null) {
+    minX = Math.min(minX, (this.state.boardWidth - this.state.image.width) / 2); // Image x position
+    maxX = Math.max(maxX, (this.state.boardWidth - this.state.image.width) / 2 + this.state.image.width); // Image x position + width
+    minY = Math.min(minY, (this.state.boardHeight - this.state.image.height) / 2); // Image y position
+    maxY = Math.max(maxY, (this.state.boardHeight - this.state.image.height) / 2 + this.state.image.height); // Image y position + height
+  }
+
+  const dataURL = this.stageRef.getStage().toDataURL({
+    x: minX- padding,
+    y: minY - padding,
+    width: maxX - minX + 2*padding,
+    height: maxY - minY + 2*padding,
+  });
+
+  const dataObj = {
+    lines: this.state.lines,
+    boardWidth: this.state.boardWidth,
+    boardHeight: this.state.boardHeight,
+  };
+
+  const dataJSON = JSON.stringify(dataObj);
+
+  return { dataURL, dataJSON };
 };
 
 updateBoardSize = () => {
@@ -110,9 +145,9 @@ updateBoardSize = () => {
     let lines=[];
     let boardWidth=0;
     let boardHeight=0;
-    if (this.props.refined_image!='placeholder'){
-      return { lines, boardWidth, boardHeight }
-    }
+    // if (this.props.refined_image!='placeholder'){
+    //   return { lines, boardWidth, boardHeight }
+    // }
     if(canvasJson!=='placeholder'){
       return JSON.parse(canvasJson);
     }
@@ -137,8 +172,16 @@ updateBoardSize = () => {
         isErasing: false,
         lines: [...this.state.lines, { points: [e.evt.layerX, e.evt.layerY], color: '#F9F8FC', strokeWidth: strokeWidth }],
       });
-    } 
-  };
+    }else if(selectedTool === 'hand'){
+      if (e.target === this.imageNode) {
+        this.setState({ selectedNode: e.target });
+      } else {
+        this.setState({ selectedNode: null });
+      }
+    };
+    }
+
+    
 
   handleStrokeWidthChange = value => {
     this.setState({ strokeWidth: value });
@@ -202,6 +245,7 @@ updateBoardSize = () => {
       return brushPoints;
   }
 
+
 render() {
     const { lines, boardWidth, boardHeight, image , strokeWidth } = this.state;
     return (
@@ -216,6 +260,48 @@ render() {
           ref={ref => { this.stageRef = ref; }}
         >
           <Layer>
+            
+            {image && (
+              <Image
+                image={image}
+                x={(this.state.boardWidth - image.width) / 2} // 计算x坐标，使图像居中
+                y={(this.state.boardHeight - image.height) / 2 } // 计算y坐标，使图像居中
+                height={image.height}
+                width={image.width}
+                opacity={1}
+                draggable={this.state.draggable}
+                ref={node => {
+                  this.imageNode = node;
+                }}
+                // Add any other props you need, such as width, height, scale, etc.
+              />
+              
+            )}
+            {image && this.state.selectedNode === this.imageNode && (
+              <Transformer
+                ref={node => {
+                  this.transformerNode = node;
+                }}
+                boundBoxFunc={(oldBox, newBox) => {
+                  // 限制缩放范围
+                  const { width, height } = image;
+                  console.log(newBox.width,newBox.height)
+                  const scaleX = newBox.width / width;
+                  const scaleY = newBox.height / height;
+                  const scale = Math.min(scaleX, scaleY);
+
+                  return {
+                    x: newBox.x,
+                    y: newBox.y,
+                    width: width * scale,
+                    height: height * scale
+                  };
+                }}
+                nodes={[this.imageNode]}
+                visible={this.state.selectedNode === this.imageNode}
+                rotateEnabled={false}
+              />
+            )}
             {lines.map((line, index) => (
               <Line
                 key={index}
@@ -226,22 +312,10 @@ render() {
                 tension={0.5}
               />
             ))}
-            {image && (
-              <Image
-                image={image}
-                x={100} // Set your x coordinate
-                y={100} // Set your y coordinate
-                height={400}
-                width={400}
-                opacity={1}
-        
-                // Add any other props you need, such as width, height, scale, etc.
-              />
-            )}
           </Layer>
         </Stage>
        <div className='sliderbar'>
-        <Slider vertical  min={1} max={20} defaultValue={8} onChange={this.handleStrokeWidthChange}  value={strokeWidth}/>
+        <Slider vertical  min={1} max={20} defaultValue={5} onChange={this.handleStrokeWidthChange}  value={strokeWidth}/>
         </div>
       </div>
     );
