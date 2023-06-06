@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import ImageList from '../components/ImageList.js'
 import AddImageButton from '../components/AddImageButton.js'
 import { connect } from 'react-redux';
-import {changeURL,changeJSON,ImgIndex} from '../reducer/storypage.js'
+import {changeURL,changeJSON,ImgIndex,changeRefinedImage} from '../reducer/storypage.js'
 
 class MenuItemContent extends Component {
   constructor(props) {
@@ -34,16 +34,18 @@ class MenuItemContent extends Component {
 
   handleAddImage = () => {
     console.log('add happend')
-    let new_url, new_json, id
+    let new_url, new_json, id, new_image 
     switch(this.state.cate){
       case 'role':
         new_url = [...this.props.role_url,'placeholder'];
         new_json = [...this.props.role_json,'placeholder'];
+        new_image = [...this.props.role_image,'placeholder']
         id =1;
         break;
       case 'scene':
         new_url = [...this.props.scene_url,'placeholder'];
         new_json = [...this.props.scene_json,'placeholder'];
+        new_image = [...this.props.scene_image,'placeholder']
         id =2;
         break;
       case 'plot':
@@ -53,6 +55,9 @@ class MenuItemContent extends Component {
         break;
     }
     this.props.onChange(id,new_url,new_json )
+    if (id===1 || id==2){
+      this.props.onChangeImage(id,new_image)
+    }
     // console.log(new_json,new_url)
     
   }
@@ -136,7 +141,9 @@ const mapStateToProps = (state) => {
     role_json: state.role_json,
     scene_json: state.scene_json,
     plot_json: state.plot_json,
-    image_index: state.image_index
+    image_index: state.image_index,
+    role_image: state.role_image,
+    scene_image: state.scene_image
 
     // role_index: state.role_index,
     // scene_index: state.scene_index,
@@ -149,6 +156,11 @@ const mapDispatchToProps = (dispatch) => {
     onChange: (id,url,json) => {
       dispatch(changeJSON(id,json));
       dispatch(changeURL(id,url));
+      // dispatch(ImgIndex(-1))
+    },
+
+    onChangeImage: (id,image) => {
+      dispatch(changeRefinedImage(id,image));
       // dispatch(ImgIndex(-1))
     }
   }

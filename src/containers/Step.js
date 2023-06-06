@@ -26,10 +26,31 @@ class StepContainer extends Component {
 
   
   redirectToPage = () => {
+    var formData = new FormData();
+    const role_url_list = this.props.role_url.filter(url => url !== 'placeholder');
+    const scene_url_list = this.props.scene_url.filter(url => url !== 'placeholder');
+    console.log(role_url_list)
+    formData.append('role', JSON.stringify(role_url_list));
+    formData.append('scene', JSON.stringify(scene_url_list));
+    fetch('http://127.0.0.1:5000/save_drawings', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {  
+      console.log(data.status)
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+  });
+
+  window.location.href = 'http://localhost:8601/';
+  }
 
     
     
-}
+    
+
   render() {
 
     const item = [{title: '',},{title: '',},{title: '',},]

@@ -16,7 +16,7 @@ class InspirationList extends Component {
 
   handleAsk = () => {
     let id, askterm
-    id = this.props.act
+    id = (this.props.act+1).toString()
     switch (this.props.unfold_index){
       case 1:
         askterm = 'role'

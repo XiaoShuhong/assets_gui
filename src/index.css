@@ -49,6 +49,7 @@
   flex-direction: column;
   align-items: center;
   margin-bottom: 80px;
+  margin-left: -40px;
 }
 
 
@@ -377,4 +378,11 @@
 
 .audio-element {
   display: none;
+}
+
+.sliderbar{
+
+  position: absolute;
+  top:20%;
+  height:50%
 }

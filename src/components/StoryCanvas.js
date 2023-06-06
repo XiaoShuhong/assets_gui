@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Stage, Layer, Line } from 'react-konva';
+import { Stage, Layer, Line, Image } from 'react-konva';
 import { connect } from 'react-redux';
-
+import { Slider } from 'antd';
 
 class StoryCanvas extends Component {
   constructor(props) {
@@ -15,15 +15,20 @@ class StoryCanvas extends Component {
       boardHeight: initialData.boardHeight ||0,
       cate_id:this.props.cate_id,
       image_id:this.props.image_id,
+      image:this.props.image,
+      strokeWidth: 8
+     
   };
 }
 
 componentDidMount() {
+  // this.loadImage();
   this.updateBoardSize();
   window.addEventListener('resize', this.updateBoardSize);
   if (this.props.getUndoFunction) {
     this.props.getUndoFunction(this.undoLastLine);
   }
+
 
 
 }
@@ -40,40 +45,36 @@ componentDidUpdate(prevProps,prevState) {
       currentColor: this.props.color,
     });
   }
-  if (prevProps.image_index !== this.props.image_index || prevProps.unfold_index !== this.props.unfold_index) {
-    // Save the old canvas data if image_index or unfold_index has changed
-    //prevProps.unfold_index==0
-    
-      console.log(prevProps.image_index,this.props.image_index,prevProps.unfold_index,this.props.unfold_index)
-      const oldCanvasData = this.saveCanvas();
-      this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, oldCanvasData);
-      
-      // // Load the new canvas data
-      
-      const initialData = this.loadCanvasData(this.props.json);
-      this.setState({
+  if(prevState.isDrawing!==this.state.isDrawing){
+    const oldCanvasData = this.saveCanvas();
+    this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, oldCanvasData);
+  }
+  if(prevProps.image_index !== this.props.image_index || prevProps.unfold_index !== this.props.unfold_index){
+    const initialData = this.loadCanvasData(this.props.json);
+    this.setState({
         lines: initialData.lines || [],
         // boardWidth: initialData.boardWidth || 0,
         // boardHeight: initialData.boardHeight || 0,
         cate_id: this.props.cate_id,
         image_id: this.props.image_index,
+        image:this.props.image
+        // images: initialData.images || [],
       });
+  }
+  if(prevProps.image!==this.props.image){
+    console.log('here')
     
+    this.setState({image:this.props.image})
     
   }
-  // if(prevProps.image_index!=this.props.image_index){
-  //   if(this.props.image_index!==this.state.image_id){
-  //       console.log('change index from ', this.state.image_id,'to ',this.props.image_index)
-  //       const newCanvasData=this.saveCanvas()
-  //       this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, newCanvasData)
-  //   }
-  // }
-  
-  // if(this.props.unfold_index!==this.state.cate_id || this.props.image_index!==this.state.image_id ){
-      
-  // }
+  if(prevState.image!==this.state.image&& this.state.image!==null){
+    console.log('here2')
+    const oldCanvasData = this.saveCanvas();
+    this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, oldCanvasData); 
+  }
 
 }
+
 
 saveCanvas= () => {
   const dataURL = this.stageRef.getStage().toDataURL();
@@ -83,6 +84,7 @@ saveCanvas= () => {
       lines: this.state.lines,
       boardWidth: this.state.boardWidth,
       boardHeight: this.state.boardHeight,
+      // images: this.state.images
     };
     // Store the JSON object as a string
     const dataJSON = JSON.stringify(dataObj);
@@ -108,6 +110,9 @@ updateBoardSize = () => {
     let lines=[];
     let boardWidth=0;
     let boardHeight=0;
+    if (this.props.refined_image!='placeholder'){
+      return { lines, boardWidth, boardHeight }
+    }
     if(canvasJson!=='placeholder'){
       return JSON.parse(canvasJson);
     }
@@ -118,7 +123,8 @@ updateBoardSize = () => {
 
   handleMouseDown = (e) => {
     const  selectedTool  = this.props.tool;
-    let strokeWidth=2;
+    let strokeWidth=this.state.strokeWidth;
+
     if (selectedTool === 'pen' || selectedTool === 'brush') {
       this.setState({
         isDrawing: true,
@@ -126,18 +132,18 @@ updateBoardSize = () => {
         lines: [...this.state.lines, { points: [e.evt.layerX, e.evt.layerY], color: this.state.currentColor, strokeWidth: strokeWidth }],
       });
     }else if (selectedTool === 'rubber') {
-      strokeWidth=10;
       this.setState({
         isDrawing: true,
         isErasing: false,
         lines: [...this.state.lines, { points: [e.evt.layerX, e.evt.layerY], color: '#F9F8FC', strokeWidth: strokeWidth }],
       });
-    } else if (selectedTool === 'pot') {
-      console.log(this.props.role_json,this.props.role_url)
-      console.log(this.props.scene_json,this.props.scene_url)
-      console.log(this.props.plot_json,this.props.plot_url)
-    }
+    } 
   };
+
+  handleStrokeWidthChange = value => {
+    this.setState({ strokeWidth: value });
+  }
+
 
   handleMouseMove = (e) => {
     const selectedTool = this.props.tool;
@@ -197,30 +203,47 @@ updateBoardSize = () => {
   }
 
 render() {
-    const { lines, boardWidth, boardHeight } = this.state;
+    const { lines, boardWidth, boardHeight, image , strokeWidth } = this.state;
     return (
-      <Stage
-        width={boardWidth}
-        height={boardHeight}
-        onMouseDown={this.handleMouseDown}
-        onMouseMove={this.handleMouseMove}
-        onMouseUp={this.handleMouseUp}
-        onMouseLeave={this.handleMouseLeave}
-        ref={ref => { this.stageRef = ref; }}
-      >
-        <Layer>
-          {lines.map((line, index) => (
-            <Line
-              key={index}
-              points={line.points}
-              stroke={line.color} // Use the stored color for each line
-              strokeWidth={line.strokeWidth}
-              lineCap="round"
-              tension={0.5}
-            />
-          ))}
-        </Layer>
-      </Stage>
+      <div>
+        <Stage
+          width={boardWidth}
+          height={boardHeight}
+          onMouseDown={this.handleMouseDown}
+          onMouseMove={this.handleMouseMove}
+          onMouseUp={this.handleMouseUp}
+          onMouseLeave={this.handleMouseLeave}
+          ref={ref => { this.stageRef = ref; }}
+        >
+          <Layer>
+            {lines.map((line, index) => (
+              <Line
+                key={index}
+                points={line.points}
+                stroke={line.color} // Use the stored color for each line
+                strokeWidth={line.strokeWidth}
+                lineCap="round"
+                tension={0.5}
+              />
+            ))}
+            {image && (
+              <Image
+                image={image}
+                x={100} // Set your x coordinate
+                y={100} // Set your y coordinate
+                height={400}
+                width={400}
+                opacity={1}
+        
+                // Add any other props you need, such as width, height, scale, etc.
+              />
+            )}
+          </Layer>
+        </Stage>
+       <div className='sliderbar'>
+        <Slider vertical  min={1} max={20} defaultValue={8} onChange={this.handleStrokeWidthChange}  value={strokeWidth}/>
+        </div>
+      </div>
     );
   }
 }
@@ -235,6 +258,8 @@ const mapStateToProps = (state) => {
     role_url: state.role_url,
     scene_url: state.scene_url,
     plot_url: state.plot_url,
+    role_image: state.role_image,
+    scene_image: state.scene_image
   };
 };
 

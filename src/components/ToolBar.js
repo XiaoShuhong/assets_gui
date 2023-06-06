@@ -9,16 +9,14 @@ import Pot from '../assets/image/pot.png'
 import PotSelected from '../assets/image/pot_select.png'
 import Redo from '../assets/image/redo.png'
 import RedoSelected from '../assets/image/redo_select.png'
-import Shape1 from '../assets/image/shape1.png'
-import Shape1Selected from '../assets/image/shape1_select.png'
-import ArrowUp from '../assets/image/arrowup.png'
-import ArrowDown from '../assets/image/arrowdown.png'
+
 export default class ToolBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
       activeTool: 'pen', // 默认选中铅笔工具
       isRedoActive: false,
+      isPotActive: false, 
       isShapeMenuOpen: false,
       selectedShape: 'shape1',
     };
@@ -37,12 +35,23 @@ export default class ToolBar extends Component {
       }, 100);
       
     }
+
+    if (tool === 'pot') {
+      this.setState({ isPotActive: true });
+      this.props.setGenerate(true)
+      setTimeout(() => {
+        this.setState({ isPotActive: false });
+        this.handleToolClick(pre_tool);
+      }, 100);
+      
+    }
+
     this.props.onToolSelect(tool);
   };
 
   render() {
-    const { activeTool, isRedoActive  } = this.state;
-
+    const { activeTool, isRedoActive, isPotActive  } = this.state;
+    
     return (
       <div className="toolbar">
         <ToolButton
@@ -98,20 +107,27 @@ export default class ToolBar extends Component {
           tool="pot"
           active={activeTool === 'pot'}
           onClick={this.handleToolClick}
+          isPotActive={isPotActive}
         >
-          {activeTool === 'pot' ? (
+          {activeTool === 'pot' && isPotActive ? (
             <img src={PotSelected} alt="pot" />
           ) : (
             <img src={Pot} alt="pot" />
           )}
         </ToolButton>
 
-        <ShapeButton
-          tool = "shape"
-          active={activeTool === 'shape'}
+        {/* <ToolButton
+          tool="pot"
+          active={activeTool === 'pot'}
           onClick={this.handleToolClick}
         >
-        </ShapeButton>
+          {activeTool === 'pot' ? (
+            <img src={PotSelected} alt="pot" />
+          ) : (
+            <img src={Pot} alt="pot" />
+          )}
+        </ToolButton> */}
+
 
         
       </div>
@@ -137,48 +153,3 @@ class ToolButton extends Component {
   }
 }
 
-class ShapeButton extends Component{
-  constructor(props) {
-    super(props);
-    this.state = {
-      showShapeBar: false, // Initial state: shapebar is hidden
-    };
-  }
-
-  handleClick = () => {
-    const { tool, onClick } = this.props;
-    onClick(tool); // 调用父组件传递的回调函数，并将工具名称作为参数传递
-  };
-
-  handleToggleShapeBar = () => {
-    this.setState((prevState) => ({
-      showShapeBar: !prevState.showShapeBar, // Toggle the state of showShapeBar
-    }));
-  };
-  render(){
-    const { tool, active } = this.props;
-    const { showShapeBar } = this.state;
-    const arrowIcon = showShapeBar ? <img src={ArrowDown} alt="Toggle Menu" /> : <img src={ArrowUp} alt="Toggle Menu" />;
-    return (
-      <div>
-        <div className="shape-button">
-          <div className="toolbutton" onClick={this.handleClick}>
-                {active ? (
-                  <img src={Shape1Selected} alt="Shape" />
-                ) : (
-                  <img src={Shape1} alt="Shape" />
-                )}
-          </div>
-          <div className="shape-menu-toggle"  onClick={this.handleToggleShapeBar}>  
-              {/* onClick={this.handleToggleMenu} */}
-              {arrowIcon}
-          </div>
-        </div>
-        {showShapeBar &&<div className="shapebar">
-            暂时不写
-          </div>}
-      </div>
-      
-    );
-  }
-}

@@ -30,11 +30,11 @@ class VoiceButton extends Component {
   handleAct = () => {
     switch(this.props.act){
       case 0:
-        return 'act1'
+        return '1'
       case 1:
-        return 'acrt2'
+        return '2'
       case 2:
-        return 'act3'
+        return '3'
     }
 
   }

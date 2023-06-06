@@ -19,7 +19,7 @@ export default class ImageList extends Component {
           <ImageItem key={index} url={image} 
           onDelete={() => this.handleDeleteImage(index)}
           onClickImage={() => this.handleClickImage(index)}
-          index={index} />
+          index={index}/>
         ))}
       </div>
     );
