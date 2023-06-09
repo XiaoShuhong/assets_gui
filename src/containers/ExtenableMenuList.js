@@ -13,6 +13,7 @@ constructor(props) {
     this.state = {unfold_id: null};
   } 
 
+
   handleUnfold= (index) => {
     
     this.setState({ unfold_id: index }, () => {
@@ -56,6 +57,7 @@ render() {
 const mapStateToProps = (state) => {
   return {
     unfold_index: state.unfold_index,
+    act:state.act
   }
 }
 

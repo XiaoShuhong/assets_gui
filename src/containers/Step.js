@@ -8,23 +8,15 @@ import JumpToCode from '../assets/image/jump.png';
 
 class StepContainer extends Component {
 
-  constructor () {
-    super()
-  }
 
-  handleStepChange(e){
-    // debugger
-    const oldact =this.props.act
-
-  
-    if (oldact!==e){
-      this.props.onChange(e)
-    }
+  handleClick = (id) => {
+    const cur_act = this.props.act
+    if (id>cur_act){
     
-  }
-  
+      this.props.onChange(id)
+    }
+  };
 
-  
   redirectToPage = () => {
     var formData = new FormData();
     const role_url_list = this.props.role_url.filter(url => url !== 'placeholder');
@@ -47,27 +39,57 @@ class StepContainer extends Component {
   window.location.href = 'http://localhost:8601/';
   }
 
-    
-    
-    
 
   render() {
-
-    const item = [{title: '',},{title: '',},{title: '',},]
-    return (
-      <div className='step'>
-          <Steps
-            current={this.props.act}
-            labelPlacement="vertical"
-            items={item}
-            onChange={this.handleStepChange.bind(this)}
-           />
-           {this.props.act === 2 && (
-              <img src={JumpToCode} alt="Your Image" onClick={this.redirectToPage}/>
-            )}
+    const act = this.props.act;
+    return(
+      <div>
+        <div className='step'>
+          <div className='stepicon' id='0' onClick={() => this.handleClick(0)}>
+            <div className="circle-large">
+                <div className="circle-small" style={{backgroundColor: act >= 0 ? 'rgb(255, 202, 67)' : ''}}>
+                    <span className="circle-number">1</span>
+                </div>
+            </div>
+        </div>
+        <hr className="custom-line"/>
+        <div className='stepicon' id='1' onClick={() => this.handleClick(1)}>
+            <div className="circle-large">
+                <div className="circle-small" style={{backgroundColor: act >= 1 ? 'rgb(255, 202, 67)' : ''}}>
+                    <span className="circle-number">2</span>
+                </div>
+            </div>
+        </div>
+        <hr className="custom-line"/>
+        <div className='stepicon' id='2' onClick={() => this.handleClick(2)}>
+            <div className="circle-large">
+                <div className="circle-small" style={{backgroundColor: act >= 2 ? 'rgb(255, 202, 67)' : ''}}>
+                    <span className="circle-number">3</span>
+                </div>
+            </div>
+        </div>
+       
       </div>
+      <div className='jump'>
+        <img 
+          src={JumpToCode} 
+          alt="Your Image" 
+          style={{ visibility: act !== 2 ? 'hidden' : 'visible' }}
+          onClick={this.redirectToPage}
+        />
+      </div>
+     
+      </div>
+      
     )
   }
+
+
+
+
+
+
+
 }
 
 
