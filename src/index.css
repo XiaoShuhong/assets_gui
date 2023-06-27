@@ -452,3 +452,7 @@
   display: flex;
   justify-content: center;
 }
+
+.showimage{
+  margin-top: -50px;
+}

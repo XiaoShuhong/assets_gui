@@ -10,7 +10,7 @@ class StoryCanvas extends Component {
     this.state = {
       lines: initialData.lines || [],
       isDrawing: false,
-      currentColor: props.color, 
+      currentColor: this.props.color, 
       boardWidth: initialData.boardWidth ||0,
       boardHeight: initialData.boardHeight ||0,
       cate_id:this.props.cate_id,
@@ -18,8 +18,7 @@ class StoryCanvas extends Component {
       image:this.props.image,
       strokeWidth: 5,
       selectedNode: null,
-      draggable: false
-     
+      showImage: this.props.refined_image!=='placeholder',
   };
 }
 
@@ -74,17 +73,31 @@ componentDidUpdate(prevProps,prevState) {
     this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, oldCanvasData); 
   }
   if(prevProps.tool!==this.props.tool){
-    if(this.props.tool==='hand'){
-      this.setState({draggable:true})
-    }else if(prevProps.tool==='hand'){
-      this.setState({draggable:false, selectedNode:null})
+    if(prevProps.tool=='hand' && this.props.tool !== 'hand') {
+      if(this.transformer!==undefined){
+        this.transformer.detach(); // Detach the Transformer from the image
+        this.setState({ selectedNode: null }); // Deselect the image
+      }
+      
     }
-
   }
 
 }
 
+toggleShowImage = () => {
+  this.setState(state => ({
+    showImage: !state.showImage
+  }));
+}
 
+
+handleImageClick = (e) => {
+  if(this.props.tool === 'hand') {
+  this.imageNode = e.target;
+  this.transformer.attachTo(e.target);
+  this.setState({ selectedNode: this.imageNode });
+};
+}
 saveCanvas = () => {
   let minX = this.state.boardWidth;
   let maxX = 0;
@@ -173,8 +186,10 @@ updateBoardSize = () => {
         lines: [...this.state.lines, { points: [e.evt.layerX, e.evt.layerY], color: '#F9F8FC', strokeWidth: strokeWidth }],
       });
     }else if(selectedTool === 'hand'){
+
       if (e.target === this.imageNode) {
-        this.setState({ selectedNode: e.target });
+        this.transformer.attachTo(e.target);  // Attach the Transformer to the clicked image
+        this.setState({ selectedNode: e.target });  // Set selectedNode to the clicked image
       } else {
         this.setState({ selectedNode: null });
       }
@@ -247,7 +262,9 @@ updateBoardSize = () => {
 
 
 render() {
-    const { lines, boardWidth, boardHeight, image , strokeWidth } = this.state;
+    const { lines, boardWidth, boardHeight, image , strokeWidth, showImage } = this.state;
+    console.log(showImage)
+    console.log(this.props.refined_image)
     return (
       <div>
         <Stage
@@ -260,50 +277,36 @@ render() {
           ref={ref => { this.stageRef = ref; }}
         >
           <Layer>
-            
-            {image && (
+
+          {showImage ? (
+              image && (
+                // Existing Image component...
+                <>
               <Image
+                ref={node => {
+                  this.imageNode = node;
+                }}
                 image={image}
+                name = 'refined_image'
                 x={(this.state.boardWidth - image.width) / 2} // 计算x坐标，使图像居中
                 y={(this.state.boardHeight - image.height) / 2 } // 计算y坐标，使图像居中
                 height={image.height}
                 width={image.width}
                 opacity={1}
-                draggable={this.state.draggable}
-                ref={node => {
-                  this.imageNode = node;
-                }}
-                // Add any other props you need, such as width, height, scale, etc.
+                draggable={this.props.tool === 'hand'}
+                onClick={this.handleImageClick}
               />
-              
-            )}
-            {image && this.state.selectedNode === this.imageNode && (
               <Transformer
                 ref={node => {
-                  this.transformerNode = node;
+                  this.transformer = node;
                 }}
-                boundBoxFunc={(oldBox, newBox) => {
-                  // 限制缩放范围
-                  const { width, height } = image;
-                  console.log(newBox.width,newBox.height)
-                  const scaleX = newBox.width / width;
-                  const scaleY = newBox.height / height;
-                  const scale = Math.min(scaleX, scaleY);
-
-                  return {
-                    x: newBox.x,
-                    y: newBox.y,
-                    width: width * scale,
-                    height: height * scale
-                  };
-                }}
-                nodes={[this.imageNode]}
-                visible={this.state.selectedNode === this.imageNode}
-                rotateEnabled={false}
+                visible={this.state.selectedNode !== null}
               />
-            )}
-            {lines.map((line, index) => (
-              <Line
+            </> 
+              )
+            ) : (
+              lines.map((line, index) => (
+                <Line
                 key={index}
                 points={line.points}
                 stroke={line.color} // Use the stored color for each line
@@ -311,12 +314,23 @@ render() {
                 lineCap="round"
                 tension={0.5}
               />
-            ))}
+              
+              ))
+            )}
+            
           </Layer>
         </Stage>
        <div className='sliderbar'>
         <Slider vertical  min={1} max={20} defaultValue={5} onChange={this.handleStrokeWidthChange}  value={strokeWidth}/>
+        
+        {this.state.image !== null && (
+          <button onClick={this.toggleShowImage} className='showimage'>
+            {showImage ? 'Switch to Line' : 'Switch to Image'}
+          </button>
+        )}
         </div>
+        
+        
       </div>
     );
   }
