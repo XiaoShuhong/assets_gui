@@ -50,6 +50,7 @@ class DrawingBoard extends Component {
     if(prevState.is_generate!==this.state.is_generate &&this.state.is_generate===true){
       this.refineDrawing()
     }
+   
     if((this.props.unfold_index===1||this.props.unfold_index===2)&&(prevProps.image_index !== this.props.image_index || prevProps.unfold_index !== this.props.unfold_index)){
   
       let url
@@ -201,6 +202,7 @@ class DrawingBoard extends Component {
     var formData = new FormData();
     formData.append('url', drawingURL);
     formData.append('id', (this.props.act+1).toString());
+    formData.append('index_id', this.props.image_index.toString());
     let askterm
     if (this.props.unfold_index==1){
       askterm='role'

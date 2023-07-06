@@ -13,7 +13,8 @@ import Hand from '../assets/image/hand.png'
 import HandSelected from '../assets/image/hand_selected.png'
 import unfold from '../assets/image/unfold.png'
 import fold from '../assets/image/fold.png'
-export default class ToolBar extends Component {
+import { connect } from 'react-redux';
+class ToolBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,6 +57,14 @@ export default class ToolBar extends Component {
   }
   handleClickUnFold=() => {
     this.props.onClickUnFold();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevProps.image_index !== this.props.image_index || prevProps.unfold_index !== this.props.unfold_index){
+      console.log('my')
+      this.setState({ activeTool: 'pen' });
+      this.props.onToolSelect('pen');
+    }
   }
   render() {
     const { activeTool, isRedoActive, isPotActive  } = this.state;
@@ -183,3 +192,11 @@ class ToolButton extends Component {
   }
 }
 
+const mapStateToProps = (state) => {
+  return {
+    unfold_index: state.unfold_index,
+    image_index: state.image_index,
+  };
+};
+
+export default connect(mapStateToProps)(ToolBar);

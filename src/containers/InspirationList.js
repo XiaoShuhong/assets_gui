@@ -47,6 +47,7 @@ class InspirationList extends Component {
     var formData = new FormData()
     formData.append('id', id)
     formData.append('askterm', askterm)
+    formData.append('index_id', this.props.image_index)
     fetch('http://127.0.0.1:5000/generate', {
       method: 'POST',
       body: formData,

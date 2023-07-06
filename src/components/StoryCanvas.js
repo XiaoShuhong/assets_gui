@@ -7,6 +7,7 @@ class StoryCanvas extends Component {
   constructor(props) {
     super(props);
     const initialData =this.loadCanvasData(this.props.json);
+    
     this.state = {
       lines: initialData.lines || [],
       isDrawing: false,
@@ -18,7 +19,8 @@ class StoryCanvas extends Component {
       image:this.props.image,
       strokeWidth: 5,
       selectedNode: null,
-      showImage: this.props.refined_image!=='placeholder',
+      showImage: false
+      // this.props.refined_image!=='placeholder',
   };
 }
 
@@ -61,6 +63,12 @@ componentDidUpdate(prevProps,prevState) {
         image:this.props.image
         // images: initialData.images || [],
       });
+      if(this.transformer){
+        this.transformer.detach(); // Detach the Transformer from the image
+        this.setState({ selectedNode: null }); // Deselect the image
+      }
+    const is_refined = this.checkShowImage()
+    this.setState({showImage:is_refined})
   }
   if(prevProps.image!==this.props.image){
     
@@ -74,7 +82,8 @@ componentDidUpdate(prevProps,prevState) {
   }
   if(prevProps.tool!==this.props.tool){
     if(prevProps.tool=='hand' && this.props.tool !== 'hand') {
-      if(this.transformer!==undefined){
+      console.log(this.transformer)
+      if(this.transformer){
         this.transformer.detach(); // Detach the Transformer from the image
         this.setState({ selectedNode: null }); // Deselect the image
       }
@@ -83,7 +92,22 @@ componentDidUpdate(prevProps,prevState) {
   }
 
 }
-
+checkShowImage= () => {
+  if(this.props.unfold_index==1){
+    if(this.props.role_image[this.props.image_index]!=='placeholder'){
+      return true
+    }else{
+      return false
+    }
+    
+  }else if(this.props.unfold_index===2){
+    if(this.props.scene_image[this.props.image_index]!=='placeholder'){
+      return true
+    }else{
+      return false
+    }
+  }
+}
 toggleShowImage = () => {
   this.setState(state => ({
     showImage: !state.showImage
@@ -263,8 +287,8 @@ updateBoardSize = () => {
 
 render() {
     const { lines, boardWidth, boardHeight, image , strokeWidth, showImage } = this.state;
-    console.log(showImage)
-    console.log(this.props.refined_image)
+    console.log('showimage:',showImage)
+    
     return (
       <div>
         <Stage

@@ -97,7 +97,10 @@ const mapStateToProps = (state) => {
   return {
     act: state.act,
     role_url:state.role_url,
-    scene_url:state.scene_url
+    scene_url:state.scene_url,
+    role_image:state.role_image,
+    scene_image:state.scene_image
+
   }
 }
 
