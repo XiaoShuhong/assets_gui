@@ -147,11 +147,11 @@ class InspirationList extends Component {
       }
       else{
         return (
-        <div className="inspirationlist2">
-          <div className='insp_button'>
+        // <div className="inspirationlist2">
+          <div className='insp_button2'>
             <img src={buttonOff} onClick={this.handleButtonClick}/>
           </div>
-        </div>
+        // </div>
         );
       }
     }

@@ -422,6 +422,11 @@
   position: absolute;
   right:-45%
 }
+.insp_button2{
+  position: absolute;
+  bottom: 75%;
+  right:1%
+}
 
 .circle-large {
   width: 54px;
