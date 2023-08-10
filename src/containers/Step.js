@@ -3,10 +3,14 @@ import { Steps } from 'antd';
 import { connect } from 'react-redux'
 import { goToAct } from '../reducer/storypage';
 import JumpToCode from '../assets/image/jump.png';
-
+import play0 from '../assets/audio/第一幕.mp3';
+import play1 from '../assets/audio/第二幕.mp3';
+import play2 from '../assets/audio/第三幕.mp3';
 
 
 class StepContainer extends Component {
+
+
 
 
   handleClick = (id) => {
@@ -14,8 +18,22 @@ class StepContainer extends Component {
     if (id>cur_act){
     
       this.props.onChange(id)
+      if(id===0){
+        const audio = new Audio(play0);
+        audio.play();
+      }
+      else if(id===1){
+        const audio = new Audio(play1);
+        audio.play();
+      }
+      else if(id===2){
+        const audio = new Audio(play2);
+        audio.play();
+      };
     }
-  };
+    
+    }
+    
 
   redirectToPage = () => {
     var formData = new FormData();

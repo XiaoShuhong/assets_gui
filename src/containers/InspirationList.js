@@ -37,17 +37,28 @@ class InspirationList extends Component {
   }
 
   fetchData = () => {
-    let id, askterm
+    let id, askterm, draft_url
     if (!this.props.help) {
       return null // Don't fetch anything if help is false
     } else {
       [id, askterm] = this.handleAsk()
     }
-
+    // get draft on current page 
+    if(this.props.unfold_index===1){
+       draft_url = this.props.role_url[this.props.image_index]
+    }
+    else if(this.props.unfold_index===2){
+       draft_url = this.props.scene_url[this.props.image_index]
+    }
+    else{
+       draft_url = null
+    }
+    
     var formData = new FormData()
     formData.append('id', id)
     formData.append('askterm', askterm)
     formData.append('index_id', this.props.image_index)
+    formData.append('draft_url', draft_url)
     fetch('http://10.73.3.223:55231/generate', {
       method: 'POST',
       body: formData,
@@ -201,7 +212,9 @@ const mapStateToProps = (state) => {
     help: state.help,
     image_index: state.image_index,
     unfold_index: state.unfold_index,
-    act: state.act
+    act: state.act,
+    role_url: state.role_url,
+    scene_url: state.scene_url
   };
 };
 
