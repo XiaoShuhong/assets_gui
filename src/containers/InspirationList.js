@@ -48,7 +48,7 @@ class InspirationList extends Component {
     formData.append('id', id)
     formData.append('askterm', askterm)
     formData.append('index_id', this.props.image_index)
-    fetch('http://127.0.0.1:5000/generate', {
+    fetch('http://10.73.3.223:55231/generate', {
       method: 'POST',
       body: formData,
     })
@@ -110,12 +110,16 @@ class InspirationList extends Component {
     ) {
       this.fetchData()
     }
+
+    if(prevProps.unfold_index!==this.props.unfold_index || prevProps.image_index!==this.props.image_index){
+      this.setState({imgdata:[], blobdata:[]})
+    }
   }
 
 
   render() {
    
-    const { imgdata, blobdata,isLoading,isListVisible } = this.state;
+    const { imgdata, blobdata,isListVisible } = this.state;
    
     if (!this.props.help) {
       return null; // Don't render anything if help is false

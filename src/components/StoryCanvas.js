@@ -287,7 +287,7 @@ updateBoardSize = () => {
 
 render() {
     const { lines, boardWidth, boardHeight, image , strokeWidth, showImage } = this.state;
-    console.log('showimage:',showImage)
+  
     
     return (
       <div>

@@ -24,7 +24,7 @@ class StepContainer extends Component {
     console.log(role_url_list)
     formData.append('role', JSON.stringify(role_url_list));
     formData.append('scene', JSON.stringify(scene_url_list));
-    fetch('http://127.0.0.1:5000/save_drawings', {
+    fetch('http://10.73.3.223:55231/save_drawings', {
       method: 'POST',
       body: formData
     })
@@ -36,7 +36,7 @@ class StepContainer extends Component {
       console.error('Error:', error);
   });
 
-  window.location.href = 'http://localhost:8601/';
+  window.location.href = 'http://10.73.3.223:55234/';
   }
 
 

@@ -204,14 +204,14 @@ class DrawingBoard extends Component {
     formData.append('id', (this.props.act+1).toString());
     formData.append('index_id', this.props.image_index.toString());
     let askterm
-    if (this.props.unfold_index==1){
+    if (this.props.unfold_index===1){
       askterm='role'
     }
-    else if(this.props.unfold_index==2){
+    else if(this.props.unfold_index===2){
       askterm='background'
     }
     formData.append('askterm', askterm);
-    fetch('http://127.0.0.1:5000/generate_img_to_img', {
+    fetch('http://10.73.3.223:55231/generate_img_to_img', {
       method: 'POST',
       body: formData
     })

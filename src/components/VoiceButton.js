@@ -69,7 +69,7 @@ class VoiceButton extends Component {
           formData.append('file', blob, 'filename.webm'); 
           formData.append('act', act);
           formData.append('type', type);
-          fetch('http://127.0.0.1:5000/get_audio', {
+          fetch('http://10.73.3.223:55231/get_audio', {
             method: 'POST',
             body: formData
           })
