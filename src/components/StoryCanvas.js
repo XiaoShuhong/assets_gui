@@ -19,8 +19,8 @@ class StoryCanvas extends Component {
       image:this.props.image,
       strokeWidth: 5,
       selectedNode: null,
-      showImage: false
-      // this.props.refined_image!=='placeholder',
+      showImage: this.props.refined_image!=='placeholder'
+      // ,
   };
 }
 

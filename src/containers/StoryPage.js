@@ -1,68 +1,49 @@
-
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import NaviBar from './NaviBar.js'
-import DrawingBoard from './DrawingBoard.js'
-import FloatButtonList from './FloatButtonList.js'
-import {ImgIndex,askHelp} from '../reducer/storypage.js'
+import NaviBar from './NaviBar.js';
+import DrawingBoard from './DrawingBoard.js';
+import FloatButtonList from './FloatButtonList.js';
+import { ImgIndex, askHelp } from '../reducer/storypage.js';
+
 class StoryPage extends Component {
-  constructor(props) {
-    super(props);
-    
-  }
   componentDidUpdate(prevProps) {
-    // if unfold_index has changed to 0, set image_index to -1
-    if (this.props.unfold_index !== prevProps.unfold_index) {
-      this.props.onChangeImgIndex(-1);
-    };
-    if (
-      this.props.unfold_index !== prevProps.unfold_index ||
-      this.props.image_index !== prevProps.image_index
-    ) {
-      this.props.onChangeHelp();
+    const { unfold_index, image_index, onChangeImgIndex, onChangeHelp } = this.props;
+
+    if (unfold_index !== prevProps.unfold_index) {
+      onChangeImgIndex(-1);
+    }
+
+    if (unfold_index !== prevProps.unfold_index || image_index !== prevProps.image_index) {
+      onChangeHelp();
     }
   }
-  
 
-  handleClickImage= (index) => {
+  handleClickImage = (index) => {
     this.props.onChangeImgIndex(index);
-    
   }
-
-
 
   render() {
-    // const { image_index } = this.props;
-    // console.log(image_index,'main')
+    const { unfold_index, image_index } = this.props;
+
     return (
       <div className='storypage'>
-        <NaviBar onClickImage={this.handleClickImage}/>
+        <NaviBar onClickImage={this.handleClickImage} />
         <DrawingBoard />
-        <FloatButtonList unfold_index={this.props.unfold_index} image_index={this.props.image_index}/>
+        <FloatButtonList unfold_index={unfold_index} image_index={image_index} />
       </div>
-    )
+    );
   }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    unfold_index: state.unfold_index,
-    image_index:state.image_index,
-    help:state.help
-  };
-};
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onChangeImgIndex: (img_index) => {
-      dispatch(ImgIndex(img_index))
-    },
-    onChangeHelp: ()=>
-     {
-      dispatch(askHelp(false))
-    },
-  }
-}
+const mapStateToProps = state => ({
+  unfold_index: state.unfold_index,
+  image_index: state.image_index,
+  help: state.help
+});
 
+const mapDispatchToProps = dispatch => ({
+  onChangeImgIndex: img_index => dispatch(ImgIndex(img_index)),
+  onChangeHelp: () => dispatch(askHelp(false))
+});
 
-
-export default connect(mapStateToProps,mapDispatchToProps)(StoryPage);
+export default connect(mapStateToProps, mapDispatchToProps)(StoryPage);

@@ -17,7 +17,7 @@ const refine_scene = 'refine_scene'
 
 export default function(state,action){
   if (!state){
-    state = { ...state, act:-1,unfold_index:0, image_index:-1, role_json:['placeholder'],scene_json:['placeholder'],plot_json:['placeholder'],role_url:['placeholder'],scene_url:['placeholder'],plot_url:['placeholder'],help:false, role_image:['placeholder'],scene_image:['placeholder'] }
+    state = { ...state, act:0,unfold_index:0, image_index:-1, role_json:['placeholder'],scene_json:['placeholder'],plot_json:['placeholder'],role_url:['placeholder'],scene_url:['placeholder'],plot_url:['placeholder'],help:false, role_image:['placeholder'],scene_image:['placeholder'] }
   }
   switch (action.type){
     case GO_TO_ACT:

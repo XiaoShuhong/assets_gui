@@ -69,6 +69,8 @@ class VoiceButton extends Component {
           formData.append('file', blob, 'filename.webm'); 
           formData.append('act', act);
           formData.append('type', type);
+
+          console.log()
           fetch('http://10.73.3.223:55231/get_audio', {
             method: 'POST',
             body: formData
@@ -90,15 +92,16 @@ class VoiceButton extends Component {
       this.mediaRecorder.stop();
       this.mediaRecorder.stream.getTracks().forEach(track => track.stop());
       console.log('end');
+      if(this.props.unfold_index===3){
+        const old_plot_url = this.props.plot_url
+        let new_plot_url =  [...old_plot_url];
+        new_plot_url[this.props.image_index] = voicelabel
+        this.props.onChangeURL(this.props.unfold_index,new_plot_url)
+      }
     }
     this.chunks = [];
     this.setState({ isPressed: false });
-    if(this.props.unfold_index==3){
-      const old_plot_url = this.props.plot_url
-      let new_plot_url =  [...old_plot_url];
-      new_plot_url[this.props.image_index] = voicelabel
-      this.props.onChangeURL(this.props.unfold_index,new_plot_url)
-    }
+    
   }
 
   render() {
