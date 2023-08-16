@@ -12,12 +12,13 @@ const plot_url = 'plot_url'
 const help_state ='help_state'
 const refine_role = 'refine_role'
 const refine_scene = 'refine_scene'
+const voice_flag= 'voice_flag'
 
 //reducer
 
 export default function(state,action){
   if (!state){
-    state = { ...state, act:0,unfold_index:0, image_index:-1, role_json:['placeholder'],scene_json:['placeholder'],plot_json:['placeholder'],role_url:['placeholder'],scene_url:['placeholder'],plot_url:['placeholder'],help:false, role_image:['placeholder'],scene_image:['placeholder'] }
+    state = { ...state, act:0,unfold_index:0, image_index:-1, role_json:['placeholder'],scene_json:['placeholder'],plot_json:['placeholder'],role_url:['placeholder'],scene_url:['placeholder'],plot_url:['placeholder'],help:false, role_image:['placeholder'],scene_image:['placeholder'],vflag:false }
   }
   switch (action.type){
     case GO_TO_ACT:
@@ -45,6 +46,8 @@ export default function(state,action){
       return {...state,role_image:action.image}
     case refine_scene:
       return {...state,scene_image:action.image}
+    case voice_flag:
+      return {...state,vflag:action.vflag}
     default:
       return state;
   }
@@ -95,4 +98,8 @@ export const changeRefinedImage = (cateid,image) => {
   }else if(cateid==2){
     return { type: refine_scene, image }
   }
+}
+
+export const ChangeVFlag = (vflag) => {
+  return { type: voice_flag, vflag }
 }

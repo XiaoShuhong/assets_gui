@@ -199,6 +199,7 @@ class DrawingBoard extends Component {
   refineDrawing= () => {
 
     const drawingURL = this.getCanvasData(this.props.unfold_index).CanvasURL[this.props.image_index]
+    console.log('refineDrawing:',drawingURL )
     var formData = new FormData();
     formData.append('url', drawingURL);
     formData.append('id', (this.props.act+1).toString());

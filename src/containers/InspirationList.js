@@ -120,6 +120,8 @@ class InspirationList extends Component {
       prevProps.help !== this.props.help && this.props.help===true
     ) {
       this.fetchData()
+      
+
     }
 
     if(prevProps.unfold_index!==this.props.unfold_index || prevProps.image_index!==this.props.image_index){

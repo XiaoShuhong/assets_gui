@@ -3,7 +3,7 @@ import voiceButton from '../assets/image/say.png'
 import onvoiceButton from '../assets/image/onsay.png'
 import { connect } from 'react-redux';
 import voicelabel from '../assets/image/haveblob.png'
-import {changeJSON,changeURL} from '../reducer/storypage.js'
+import {changeJSON,changeURL,ChangeVFlag} from '../reducer/storypage.js'
 class VoiceButton extends Component {
   constructor(props) {
     super(props);
@@ -62,14 +62,14 @@ class VoiceButton extends Component {
 
           const act = this.handleAct()
           const type = this.handleType()
-          console.log(act,type,this.props.act,this.props.unfold_index)
+          console.log(act,type,this.props.act,this.props.unfold_index,this.props.image_index)
           var formData = new FormData();
 
           // Append the blob, id and type as fields in the form
           formData.append('file', blob, 'filename.webm'); 
           formData.append('act', act);
           formData.append('type', type);
-
+          formData.append('imgid', this.props.image_index);
           console.log()
           fetch('http://10.73.3.223:55231/get_audio', {
             method: 'POST',
@@ -79,6 +79,8 @@ class VoiceButton extends Component {
           .then(data => {
               console.log('Status:', data.status);
               console.log('Content:', data.content);
+              this.props.onChangeVFlag(true)
+              console.log('after voice button',this.props.vflag)
             })
           .catch((error) => {
             console.error('Error:', error);
@@ -128,6 +130,7 @@ const mapStateToProps = (state) => {
     act: state.act,
     plot_json: state.plot_json,
     plot_url: state.plot_url,
+    vflag: state.vflag
   };
 };
 
@@ -139,6 +142,9 @@ const mapDispatchToProps = (dispatch) => {
     },
     onChangeJSON: (id, json)=> {
       dispatch(changeJSON(id,json));
+    },
+    onChangeVFlag: (status)=> {
+      dispatch(ChangeVFlag(status));
     }
   }
 }

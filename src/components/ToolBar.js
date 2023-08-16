@@ -162,12 +162,14 @@ class ToolBar extends Component {
 
 
       
-    </div>
+      </div>
       : <div className="toolbar_hidden">
         <div className='fold'>
           <img src={fold} onClick={this.handleClickUnFold}/>
-          </div>
-        </div>
+      </div>
+    </div>
+
+    
       
      
     );

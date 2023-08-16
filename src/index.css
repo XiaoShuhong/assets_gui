@@ -329,7 +329,7 @@
   position: absolute;
   width: 50%;
   height: 15%;
-  bottom: 75%;
+  bottom: 80%;
   /* right: 5%; */
   display: flex;
   justify-content: space-between;
@@ -343,7 +343,7 @@
 
 .sub-inspiration1 {
   width: 20%;
-  height: 80%;
+  padding-top: 20%;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -352,13 +352,15 @@
   box-shadow: 0px 4px 10px rgba(246, 179, 46, 0.3); /* Adjust this to change the shadow */
   margin-left: 2%; /* add left margin */
   margin-right: 2%; /* add right margin */
+  padding: 0;
 }
 
 
 .sub-inspiration1 img {
-  max-width: 80%;
-  max-height: 80%;
+  max-width: 100%;
+  max-height: 100%;
   object-fit: cover;
+  border-radius: 20px;
 }
 
 .inspirationlist2{
@@ -424,7 +426,7 @@
 }
 .insp_button2{
   position: absolute;
-  bottom: 75%;
+  bottom: 80%;
   right:1%
 }
 
@@ -460,4 +462,41 @@
 
 .showimage{
   margin-top: -50px;
+}
+
+/* FloatButtonList.css */
+.custom-textarea {
+  font-size: 16px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  box-sizing: border-box;
+  resize: vertical; /* 允许垂直调整大小 */
+  transition: border-color 0.3s ease-in-out;
+}
+
+.custom-textarea:focus {
+  border-color: #007bff;
+}
+
+.textarea-container {
+  display: flex;
+  position: absolute;
+  top: 70%;
+  right:0%;
+}
+
+.send-button {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  margin-left: 10px;
+}
+
+.send-button:hover {
+  background-color: #0056b3;
 }

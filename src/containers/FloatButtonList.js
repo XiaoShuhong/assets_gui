@@ -10,9 +10,11 @@ class FloatButtonList extends Component {
       <div className='float-button-list'>
         {unfold_index > 0 && image_index > -1 && (
           <>
+             
             <HelpButton />
             <VoiceButton/>
           </>
+          
         )}
       </div>
     );

@@ -14,6 +14,9 @@ class HelpButton extends Component {
     if(this.props.unfold_index>0 && this.props.image_index>=0){
       console.log('ask chatgpt for cate ',this.props.unfold_index, 'image ',this.props.image_index);
       this.props.onChange(true);
+      if (this.props.help==true){
+        this.props.onChange(false);
+      }
     }
   }
 

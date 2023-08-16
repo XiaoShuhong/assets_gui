@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Stage, Layer, Line, Image, Transformer  } from 'react-konva';
 import { connect } from 'react-redux';
 import { Slider } from 'antd';
+import {ChangeVFlag} from '../reducer/storypage.js'
 
 class StoryCanvas extends Component {
   constructor(props) {
@@ -19,9 +20,11 @@ class StoryCanvas extends Component {
       image:this.props.image,
       strokeWidth: 5,
       selectedNode: null,
-      showImage: this.props.refined_image!=='placeholder'
+      showImage: this.props.refined_image!=='placeholder',
+      Text: ''
       // ,
-  };
+    };
+  
 }
 
 componentDidMount() {
@@ -32,6 +35,8 @@ componentDidMount() {
     this.props.getUndoFunction(this.undoLastLine);
   }
 
+  this.fetchText()
+  console.log('call fetchText')
 
 
 }
@@ -53,6 +58,8 @@ componentDidUpdate(prevProps,prevState) {
     this.props.onUpdateCanvas(this.state.cate_id, this.state.image_id, oldCanvasData);
   }
   if(prevProps.image_index !== this.props.image_index || prevProps.unfold_index !== this.props.unfold_index){
+    this.fetchText()
+    console.log('call fetchText')
     const initialData = this.loadCanvasData(this.props.json);
     this.setState({
         lines: initialData.lines || [],
@@ -90,8 +97,61 @@ componentDidUpdate(prevProps,prevState) {
       
     }
   }
+  if(prevProps.vflag!==this.props.vflag && this.props.vflag === true){
+    this.fetchText();
+    this.props.onChangeVFlag(false);
+  }
 
 }
+  
+handleType = () => {
+  switch(this.props.unfold_index){
+    case 1:
+      return 'role'
+    case 2:
+      return 'background'
+    case 3:
+      return 'event'
+  }
+
+
+}
+
+
+handleAct = () => {
+  switch(this.props.act){
+    case 0:
+      return '1'
+    case 1:
+      return '2'
+    case 2:
+      return '3'
+  }
+
+}
+
+fetchText = () => {
+  const act = this.handleAct()
+  const type = this.handleType()
+  // console.log(act,type,this.props.act,this.props.unfold_index,this.props.image_index)
+  var formData = new FormData();
+  formData.append('act', act);
+  formData.append('type', type);
+  formData.append('imgid', this.props.image_index);
+  fetch('http://10.73.3.223:55231/get_description', {
+            method: 'POST',
+            body: formData
+        })
+          .then(response => response.json())
+          .then(data => {
+              console.log('Content:', data.Text);
+              this.setState({ Text: data.Text });
+            })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+};
+
 checkShowImage= () => {
   if(this.props.unfold_index==1){
     if(this.props.role_image[this.props.image_index]!=='placeholder'){
@@ -284,7 +344,32 @@ updateBoardSize = () => {
       return brushPoints;
   }
 
+  handleTextareaChange = (e) => {
+    this.setState({ Text: e.target.value });
+  };
 
+  handleSendButtonClick = () => {
+    const act = this.handleAct()
+    const type = this.handleType()
+    // console.log(act,type,this.props.act,this.props.unfold_index,this.props.image_index)
+    var formData = new FormData();
+    formData.append('act', act);
+    formData.append('type', type);
+    formData.append('imgid', this.props.image_index);
+    formData.append('Text',  this.state.Text );
+    fetch('http://10.73.3.223:55231/send_description', {
+              method: 'POST',
+              body: formData
+          })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Status:', data.Status);
+              })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  };
+  
 render() {
     const { lines, boardWidth, boardHeight, image , strokeWidth, showImage } = this.state;
   
@@ -353,8 +438,19 @@ render() {
           </button>
         )}
         </div>
-        
-        
+
+        <div className='textarea-container'>
+              <textarea
+                value={this.state.Text} 
+                className='custom-textarea'
+                rows={3}
+                onChange={this.handleTextareaChange}
+
+              />
+              <button onClick={this.handleSendButtonClick} className='send-button'>
+                发送
+              </button>
+            </div>
       </div>
     );
   }
@@ -371,19 +467,20 @@ const mapStateToProps = (state) => {
     scene_url: state.scene_url,
     plot_url: state.plot_url,
     role_image: state.role_image,
-    scene_image: state.scene_image
+    scene_image: state.scene_image,
+    act: state.act,
+    vflag: state.vflag
   };
 };
 
 
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     onChange: (id,url,json) => {
-//       dispatch(changeJSON(id,json));
-//       dispatch(changeURL(id,url));
-//     }
-//   }
-// }
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onChangeVFlag: (status)=> {
+      dispatch(ChangeVFlag(status));
+    }
+  }
+}
 
-export default connect(mapStateToProps)(StoryCanvas);
+export default connect(mapStateToProps,mapDispatchToProps)(StoryCanvas);
